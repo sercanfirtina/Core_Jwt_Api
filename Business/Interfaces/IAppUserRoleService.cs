@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess.Interfaces
+namespace Business.Interfaces
 {
-    public interface IProductDal:IGenericDal<Product>
+    public interface IAppUserRoleService:IGenericService<AppUserRole>
     {
-      
+
     }
 }

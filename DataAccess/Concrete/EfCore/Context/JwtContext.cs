@@ -17,8 +17,7 @@ namespace DataAccess.Concrete.EfCore.Context
             modelBuilder.ApplyConfiguration(new AppUserMap());
             modelBuilder.ApplyConfiguration(new AppUserMap());
             modelBuilder.ApplyConfiguration(new AppUserRoleMap());
-            modelBuilder.ApplyConfiguration(new ProductMap());
-            
+            modelBuilder.ApplyConfiguration(new ProductMap());            
         }
 
 

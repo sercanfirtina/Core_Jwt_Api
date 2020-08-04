@@ -17,6 +17,4 @@ namespace DataAccess.Interfaces
         Task Add(T entity);
         Task Remove(T entity);
     }
-
-
 }
