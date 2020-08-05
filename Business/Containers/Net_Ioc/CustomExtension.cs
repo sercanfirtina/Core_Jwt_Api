@@ -1,7 +1,10 @@
 ﻿using Business.Concrete;
 using Business.Interfaces;
+using Business.ValidationRules.FluentValidation;
 using DataAccess.Concrete.EfCore.Repositories;
 using DataAccess.Interfaces;
+using Entities.Dtos.ProductDto;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.Containers.Net_Ioc
@@ -23,7 +26,10 @@ namespace Business.Containers.Net_Ioc
             services.AddScoped<IAppUserService, AppUserManager>();
 
             services.AddScoped<IAppUserRoleDal, EfAppUserRoleRepository>();
-            services.AddScoped<IAppUserRoleService, AppUserRoleManager>();         
+            services.AddScoped<IAppUserRoleService, AppUserRoleManager>();
+
+            services.AddTransient<IValidator<ProductAddDto>, ProductAddDtoValidator>();
+            services.AddTransient<IValidator<ProductUpdateDto>, ProductUpdateDtoValidator>();
 
         }
     }

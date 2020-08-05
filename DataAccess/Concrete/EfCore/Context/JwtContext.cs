@@ -8,7 +8,7 @@ namespace DataAccess.Concrete.EfCore.Context
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server=DESKTOP-1A4NT3P\\SQLEXPRESS;database=JwtDb;user id=sa;password=123;");
+            optionsBuilder.UseSqlServer("server=DESKTOP-1A4NT3P\\SQLEXPRESS;database=JwtDb;user id=sa;password=123;");        
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
