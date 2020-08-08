@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Concrete;
+using Entities.Dtos.AppUserDto;
 using Entities.Dtos.ProductDto;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,9 @@ namespace API.Mapping.AutoMapper
 
             CreateMap<ProductUpdateDto, Product>();
             CreateMap<Product,ProductUpdateDto>();
+
+            CreateMap<AppUserAddDto, AppUser>();
+            CreateMap<AppUser, AppUserAddDto>();
 
 
         }
