@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using API.CustomFilters;
 using AutoMapper;
 using Business.Interfaces;
+using Business.StringInfos;
 using Entities.Concrete;
 using Entities.Dtos.AppUserDto;
+using Entities.Token;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +30,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("[action]")]
+        [HttpPost("[action]")]
         [ValidModel]
         public async Task<IActionResult> SignIn(AppUserLoginDto appUserLoginDto)
         {
@@ -42,7 +45,9 @@ namespace API.Controllers
                 {
                     var roles =await _appUserService.GetRolesByUserName(appUserLoginDto.UserName);
                     var token =_jwtService.GenereateJwt(appUser, roles);
-                    return Created("", token);
+                    JwtAccessToken jwtAccessToken = new JwtAccessToken();
+                    jwtAccessToken.Token = token;
+                    return Created("", jwtAccessToken);
                 }
                 return BadRequest("Kullanıcı adı veya şifre hatalı");
             }
@@ -51,14 +56,41 @@ namespace API.Controllers
 
         [HttpPost("[action]")]
         [ValidModel]
-        public async Task<IActionResult> SignUp(AppUserAddDto appUserAddDto)
+        public async Task<IActionResult> SignUp(AppUserAddDto appUserAddDto,[FromServices] IAppUserRoleService appUserRoleService,[FromServices] IAppRoleService appRoleService)
         {
             var appUser = await _appUserService.FindByUserName(appUserAddDto.UserName);
             if (appUser!=null)            
                 return BadRequest($"{appUserAddDto.UserName} zaten alınmış");
 
             await _appUserService.Add(_mapper.Map<AppUser>(appUserAddDto));
+
+            var user = await _appUserService.FindByUserName(appUserAddDto.UserName);
+            var role = await appRoleService.FindByName(RoleInfo.Member);
+
+            await appUserRoleService.Add(new AppUserRole
+            {
+                AppRoleId=role.Id,
+                AppUserId=user.Id
+            });
             return Created("", appUserAddDto);
+        }
+
+
+        [Authorize]
+        [HttpGet("[action]")]
+        public async Task<IActionResult> ActiveUser()
+        {
+            var user = await _appUserService.FindByUserName(User.Identity.Name);
+            var roles = await _appUserService.GetRolesByUserName(User.Identity.Name);
+
+            AppUserDto appUserDto = new AppUserDto
+            {
+                FullName = user.FullName,
+                UserName = user.UserName,
+                Roles = roles.Select(I => I.Name).ToList()
+            };
+
+            return Ok(appUserDto);
         }
     }
 }

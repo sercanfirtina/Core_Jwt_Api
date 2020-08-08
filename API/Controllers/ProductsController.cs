@@ -6,9 +6,11 @@ using System.Xml.XPath;
 using API.CustomFilters;
 using AutoMapper;
 using Business.Interfaces;
+using Business.StringInfos;
 using Entities.Concrete;
 using Entities.Dtos.ProductDto;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +32,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles =RoleInfo.Admin+","+RoleInfo.Member)]
         public async Task<IActionResult> GetAll()
         {
             var products = await _productService.GetAll();
@@ -37,6 +40,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = RoleInfo.Admin)]
         [ServiceFilter(typeof(ValidId<Product>))]
         public async Task<IActionResult> GetById(int id)
         {
